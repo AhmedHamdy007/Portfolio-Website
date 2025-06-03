@@ -1,7 +1,6 @@
 "use client"
-
+import { motion, useScroll, useTransform, useSpring } from "framer-motion"
 import { useState, useEffect } from "react"
-import { motion, useScroll, useTransform } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -26,7 +25,9 @@ import Image from "next/image"
 export default function Portfolio() {
   const [activeSection, setActiveSection] = useState("hero")
   const { scrollYProgress } = useScroll()
-  const backgroundY = useTransform(scrollYProgress, [0, 1], ["0%", "100%"])
+  const smoothProgress = useSpring(scrollYProgress, { stiffness: 100, damping: 30, restDelta: 0.001 })
+  const backgroundY = useTransform(smoothProgress, [0, 1], ["0%", "100%"])
+
 
   useEffect(() => {
     const handleScroll = () => {
@@ -126,29 +127,88 @@ export default function Portfolio() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-cyan-50 to-teal-50">
       {/* Navigation */}
-       <nav className="fixed top-0 left-0 right-0 z-50 bg-white/70 backdrop-blur-xl border-b border-slate-200/50">
-      <div className="max-w-6xl mx-auto px-6 py-4">
-        <div className="flex justify-between items-center">
-          <div className="text-2xl font-bold bg-gradient-to-r from-slate-600 to-emerald-600 bg-clip-text text-transparent">
-            Ahmed Hamdy
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-white/70 backdrop-blur-xl border-b border-slate-200/50 transition-all duration-500 hover:bg-white/80 hover:backdrop-blur-2xl">
+        <div className="max-w-6xl mx-auto px-6 py-4">
+          <div className="flex justify-between items-center">
+            <motion.div 
+              className="text-2xl font-bold bg-gradient-to-r from-slate-600 to-emerald-600 bg-clip-text text-transparent"
+              whileHover={{ scale: 1.05 }}
+              transition={{ type: "spring", stiffness: 400, damping: 17 }}
+            >
+              Ahmed Hamdy
+            </motion.div>
+            <div className="hidden md:flex space-x-8">
+              {["About", "Education", "Projects", "Skills", "Contact"].map((item, index) => (
+                <motion.button
+                  key={item}
+                  onClick={() => scrollToSection(item.toLowerCase())}
+                  className={`text-sm font-medium transition-all duration-300 hover:text-emerald-600 relative group ${
+                    activeSection === item.toLowerCase() ? "text-emerald-600" : "text-slate-600"
+                  }`}
+                  whileHover={{ y: -2, scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  initial={{ opacity: 0, y: -20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ 
+                    delay: index * 0.1, 
+                    type: "spring", 
+                    stiffness: 300, 
+                    damping: 20 
+                  }}
+                >
+                  {item}
+                  <motion.span 
+                    className="absolute -bottom-1 left-0 h-0.5 bg-gradient-to-r from-emerald-400 to-teal-400 rounded-full"
+                    initial={{ width: 0 }}
+                    animate={{ 
+                      width: activeSection === item.toLowerCase() ? "100%" : 0,
+                      scaleX: activeSection === item.toLowerCase() ? 1 : 0 
+                    }}
+                    whileHover={{ width: "100%", scaleX: 1 }}
+                    transition={{ duration: 0.3, ease: "easeInOut" }}
+                  />
+                  {/* Hover glow effect */}
+                  <motion.div
+                    className="absolute inset-0 bg-emerald-400/10 rounded-lg -z-10"
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    whileHover={{ opacity: 1, scale: 1.1 }}
+                    transition={{ duration: 0.2 }}
+                  />
+                </motion.button>
+              ))}
+            </div>
+            {/* Mobile menu indicator */}
+            <motion.div 
+              className="md:hidden w-6 h-6 flex flex-col justify-center items-center cursor-pointer group"
+              whileTap={{ scale: 0.9 }}
+            >
+              <motion.span 
+                className="w-5 h-0.5 bg-slate-600 mb-1 group-hover:bg-emerald-600 transition-colors duration-300"
+                animate={{ rotate: 0 }}
+                whileHover={{ scaleX: 1.2 }}
+              />
+              <motion.span 
+                className="w-5 h-0.5 bg-slate-600 mb-1 group-hover:bg-emerald-600 transition-colors duration-300"
+                whileHover={{ scaleX: 0.8 }}
+              />
+              <motion.span 
+                className="w-5 h-0.5 bg-slate-600 group-hover:bg-emerald-600 transition-colors duration-300"
+                whileHover={{ scaleX: 1.2 }}
+              />
+            </motion.div>
           </div>
-          <div className="hidden md:flex space-x-8">
-            {["About", "Education", "Projects", "Skills", "Contact"].map((item) => (
-              <button
-                key={item}
-                onClick={() => scrollToSection(item.toLowerCase())}
-                className={`text-sm font-medium transition-all duration-300 hover:text-emerald-600 relative group ${
-                  activeSection === item.toLowerCase() ? "text-emerald-600" : "text-slate-600"
-                }`}
-              >
-                {item}
-                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-emerald-400 to-teal-400 transition-all duration-300 group-hover:w-full"></span>
-              </button>
-            ))}
-          </div>
+          {/* Progress bar indicator */}
+          <motion.div 
+            className="absolute bottom-0 left-0 h-0.5 bg-gradient-to-r from-emerald-400 to-teal-400"
+            style={{ 
+              scaleX: scrollYProgress,
+              transformOrigin: "0%" 
+            }}
+            initial={{ width: "0%" }}
+            animate={{ width: "100%" }}
+          />
         </div>
-      </div>
-    </nav>
+      </nav>
 
       {/* Hero Section */}
       <section id="hero" className="min-h-screen flex items-center justify-center relative overflow-hidden">
