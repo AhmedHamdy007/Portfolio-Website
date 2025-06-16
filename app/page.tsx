@@ -1,9 +1,11 @@
 "use client"
 import { motion, useScroll, useTransform, useSpring } from "framer-motion"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
+import Script from "next/script"
+
 import {
   Mail,
   Phone,
@@ -19,20 +21,85 @@ import {
   ExternalLink,
   Download,
   ChevronDown,
+  MessageCircle,
 } from "lucide-react"
 import Image from "next/image"
 
+// Declare global type for Botpress webchat
+declare global {
+  interface Window {
+    botpressWebChat?: any;
+  }
+}
+
+const clientId = "db8dda2a-d794-4f48-9ba1-b975532c1537"
+const configuration = {
+  composerPlaceholder: 'Ask me about Ahmed\'s experience...',
+  botName: 'Ahmed\'s Assistant',
+  botAvatar: '/ahmed-photo.jpeg',
+  // Removed 'color' as it's not a valid property
+  // Use theme configuration instead if needed
+}
+
 export default function Portfolio() {
   const [activeSection, setActiveSection] = useState("hero")
+  const [isWebchatOpen, setIsWebchatOpen] = useState(false)
+  const [isWebchatLoaded, setIsWebchatLoaded] = useState(false)
   const { scrollYProgress } = useScroll()
   const smoothProgress = useSpring(scrollYProgress, { stiffness: 100, damping: 30, restDelta: 0.001 })
   const backgroundY = useTransform(smoothProgress, [0, 1], ["0%", "100%"])
+  const webchatContainerRef = useRef<HTMLDivElement>(null)
 
+  const toggleWebchat = () => {
+    setIsWebchatOpen((prevState) => !prevState)
+  }
+
+  // Initialize Botpress webchat
+  useEffect(() => {
+    if (isWebchatOpen && !isWebchatLoaded && typeof window !== 'undefined') {
+      const initWebchat = () => {
+        if (window.botpressWebChat && webchatContainerRef.current) {
+          window.botpressWebChat.init({
+            container: webchatContainerRef.current,
+            botId: 'db8dda2a-d794-4f48-9ba1-b975532c1537',
+            hostUrl: 'https://cdn.botpress.cloud/webchat/v3.0',
+            messagingUrl: 'https://messaging.botpress.cloud',
+            clientId: 'db8dda2a-d794-4f48-9ba1-b975532c1537',
+            webhookId: 'db8dda2a-d794-4f48-9ba1-b975532c1537',
+            lazySocket: true,
+            themeName: 'prism',
+            frontendVersion: 'v3.0',
+            showPoweredBy: false,
+            theme: 'light',
+            themeColor: '#10b981'
+          })
+          setIsWebchatLoaded(true)
+        }
+      }
+
+      // Check if script is already loaded
+      if (window.botpressWebChat) {
+        initWebchat()
+      } else {
+        // Wait for script to load
+        const checkInterval = setInterval(() => {
+          if (window.botpressWebChat) {
+            initWebchat()
+            clearInterval(checkInterval)
+          }
+        }, 100)
+
+        // Cleanup interval after 10 seconds
+        setTimeout(() => clearInterval(checkInterval), 10000)
+      }
+    }
+  }, [isWebchatOpen, isWebchatLoaded])
 
   useEffect(() => {
     const handleScroll = () => {
       const sections = ["hero", "about", "education", "projects", "skills", "contact"]
       const scrollPosition = window.scrollY + 100
+      
 
       for (const section of sections) {
         const element = document.getElementById(section)
@@ -126,6 +193,22 @@ export default function Portfolio() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-cyan-50 to-teal-50">
+      {/* Botpress Webchat Scripts */}
+      <Script 
+        src="https://cdn.botpress.cloud/webchat/v3.0/inject.js"
+        strategy="afterInteractive"
+        onLoad={() => {
+          console.log('Botpress webchat script loaded')
+        }}
+      />
+      <Script 
+        src="https://files.bpcontent.cloud/2025/06/13/03/20250613030519-X2XJCGK7.js"
+        strategy="afterInteractive"
+        onLoad={() => {
+          console.log('Botpress configuration script loaded')
+        }}
+      />
+
       {/* Navigation */}
       <nav className="fixed top-0 left-0 right-0 z-50 bg-white/70 backdrop-blur-xl border-b border-slate-200/50 transition-all duration-500 hover:bg-white/80 hover:backdrop-blur-2xl">
         <div className="max-w-6xl mx-auto px-6 py-4">
@@ -568,6 +651,41 @@ export default function Portfolio() {
           <p className="text-gray-400">© 2025 Ahmed Hamdy. Built with Next.js and Tailwind CSS.</p>
         </div>
       </footer>
+
+      {/* Botpress Webchat Component */}
+      {isWebchatOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+          <div className="relative bg-white rounded-lg shadow-2xl w-full max-w-md h-96 m-4">
+            <div className="flex items-center justify-between p-4 border-b border-gray-200">
+              <h3 className="text-lg font-semibold text-gray-800">Ahmed's Assistant</h3>
+              <button
+                onClick={toggleWebchat}
+                className="text-gray-500 hover:text-gray-700 transition-colors"
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+            <div className="h-full">
+              <div ref={webchatContainerRef} className="h-full"></div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Floating Chat Button */}
+      <motion.button
+        onClick={toggleWebchat}
+        className="fixed bottom-6 right-6 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white p-4 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 z-40"
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.95 }}
+        initial={{ opacity: 0, scale: 0 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ delay: 1, type: "spring", stiffness: 200, damping: 15 }}
+       >
+        <MessageCircle className="w-6 h-6" />
+      </motion.button>
     </div>
   )
 }
