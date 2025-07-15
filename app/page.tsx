@@ -1,4 +1,5 @@
 "use client"
+import React from "react"
 import { motion, useScroll, useTransform, useSpring } from "framer-motion"
 import { useState, useEffect, useRef } from "react"
 import { Button } from "@/components/ui/button"
@@ -126,17 +127,17 @@ export default function Portfolio() {
 
   const projects = [
   {
-    title: "API Marketplace",
-    period: "April 2025 – May 2025",
-    description: "Built a full-stack API marketplace platform with a Python backend and Vue.js frontend.",
+    title: "Real-Time Analytics System (Microservice)",
+    period: "June 2024 – Present",
+    description: "Engineered a distributed real-time analytics system processing 1000+ system metrics per second using microservices architecture.",
     highlights: [
-      "User authentication & product management",
-      "RESTful API endpoints with database relationships",
-      "Vue 3 frontend with Composition API & Pinia",
-      "Shopping cart & responsive design with Tailwind CSS",
+      "Developed Apache Kafka data pipeline in Java with fault-tolerant message streaming and Zookeeper coordination.",
+      "Built Flask REST API with custom endpoints serving real-time data to frontend dashboard with 99% uptime.",
+      "Created interactive web dashboard using JavaScript, HTML, CSS, and AJAX with live charts and real-time updates.",
+      "Deployed and coordinated services using Apache Kafka and Zookeeper, ensuring fault-tolerant data flow and high system resilience."
     ],
-    tech: ["Python", "Vue.js", "Tailwind CSS", "Docker"],
-    gradient: "from-emerald-400 to-teal-500",
+    tech: ["Kafka", "Flask", "Java", "Maven", "JavaScript", "HTML", "CSS", "AJAX"],
+    gradient: "from-amber-400 to-orange-500",
   },
   {
     title: "WiseDose Application",
@@ -300,79 +301,118 @@ export default function Portfolio() {
           className="absolute inset-0 bg-gradient-to-br from-blue-100/50 via-cyan-100/50 to-teal-100/50"
         />
         <div className="max-w-6xl mx-auto px-6 py-20 relative z-10">
-          <div className="grid lg:grid-cols-2 gap-24 items-center">
-            <motion.div initial={{ opacity: 0, y: 50 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
-              <div className="text-center lg:text-left">
-                <motion.h1
-                  className="text-5xl lg:text-7xl font-bold mb-6"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.2 }}
-                >
-                  <span className="bg-gradient-to-r from-blue-600 via-cyan-600 to-teal-600 bg-clip-text text-transparent">
-                    Ahmed
-                  </span>
-                  <br />
-                  <span className="text-gray-800">Hamdy</span>
-                </motion.h1>
-                <motion.p
-                  className="text-xl text-gray-600 mb-8 leading-relaxed"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.4 }}
-                >
-                  Software Engineering Student At UTM
-                </motion.p>
-                <motion.div
-                  className="flex flex-wrap gap-4 justify-center lg:justify-start"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.6 }}
-                >
-                  <Button
-                    onClick={() => scrollToSection("projects")}
-                    className="bg-gradient-to-r from-blue-500 to-teal-500 hover:from-blue-600 hover:to-teal-600 text-white px-8 py-3 rounded-full"
-                  >
-                    View Projects
-                  </Button>
-                  <Button
-                    variant="outline"
-                    onClick={() => scrollToSection("contact")}
-                    className="border-blue-300 text-blue-600 hover:bg-blue-50 px-8 py-3 rounded-full"
-                  >
-                    Get In Touch
-                  </Button>
-                </motion.div>
-              </div>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.8, delay: 0.3 }}
-              className="flex justify-center lg:justify-end"
+        <div className="grid lg:grid-cols-3 gap-12 items-center">
+        <motion.div 
+          initial={{ opacity: 0, y: 50 }} 
+          animate={{ opacity: 1, y: 0 }} 
+          transition={{ duration: 0.8 }}
+          className="lg:col-span-2"
+        >
+          <div className="text-center lg:text-left">
+            <motion.h1
+              className="text-5xl lg:text-7xl font-bold mb-6"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
             >
-              <div className="relative">
-                <div className="w-80 h-80 rounded-full bg-gradient-to-br from-blue-200 to-teal-200 p-2">
-                  <div className="w-full h-full rounded-full overflow-hidden bg-white">
-                    <Image
-                      src="/ahmed-photo.jpeg"
-                      alt="Ahmed Hamdy"
-                      width={320}
-                      height={320}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                </div>
-                <motion.div
-                  animate={{ rotate: 360 }}
-                  transition={{ duration: 20, repeat: Number.POSITIVE_INFINITY, ease: "linear" }}
-                  className="absolute -inset-4 rounded-full border-2 border-dashed border-blue-300"
-                />
-              </div>
+              <span className="bg-gradient-to-r from-blue-600 via-cyan-600 to-teal-600 bg-clip-text text-transparent">
+                Ahmed
+              </span>
+              <br />
+              <span className="text-gray-800">Hamdy</span>
+            </motion.h1>
+            <motion.p
+              className="text-xl text-gray-600 mb-8 leading-relaxed"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4 }}
+            >
+              Software Engineering Student At UTM
+            </motion.p>
+            <motion.div
+              className="flex flex-wrap gap-4 justify-center lg:justify-start"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.6 }}
+            >
+              <Button
+                onClick={() => scrollToSection("projects")}
+                className="bg-gradient-to-r from-blue-500 to-teal-500 hover:from-blue-600 hover:to-teal-600 text-white px-8 py-3 rounded-full"
+              >
+                View Projects
+              </Button>
+              <Button
+                variant="outline"
+                onClick={() => scrollToSection("contact")}
+                className="border-blue-300 text-blue-600 hover:bg-blue-50 px-8 py-3 rounded-full"
+              >
+                Get In Touch
+              </Button>
             </motion.div>
           </div>
-        </div>
+
+          {/* Profile Image - moved below text on mobile, beside on lg+ */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8, delay: 0.3 }}
+            className="flex justify-center mt-12 lg:hidden"
+          >
+            <div className="relative">
+              <div className="w-64 h-64 rounded-full bg-gradient-to-br from-blue-200 to-teal-200 p-2">
+                <div className="w-full h-full rounded-full overflow-hidden bg-white">
+                  <Image
+                    src="/ahmed-photo.jpeg"
+                    alt="Ahmed Hamdy"
+                    width={256}
+                    height={256}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              </div>
+              <motion.div
+                animate={{ rotate: 360 }}
+                transition={{ duration: 20, repeat: Number.POSITIVE_INFINITY, ease: "linear" }}
+                className="absolute -inset-4 rounded-full border-2 border-dashed border-blue-300"
+              />
+            </div>
+          </motion.div>
+        </motion.div>
+
+        {/* Desktop Profile + Tree */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.8, delay: 0.3 }}
+          className="hidden lg:flex flex-col items-center space-y-8"
+        >
+          {/* Profile Image */}
+          <div className="relative">
+            <div className="w-72 h-72 rounded-full bg-gradient-to-br from-blue-200 to-teal-200 p-2">
+              <div className="w-full h-full rounded-full overflow-hidden bg-white">
+                <Image
+                  src="/ahmed-photo.jpeg"
+                  alt="Ahmed Hamdy"
+                  width={288}
+                  height={288}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            </div>
+            <motion.div
+              animate={{ rotate: 360 }}
+              transition={{ duration: 20, repeat: Number.POSITIVE_INFINITY, ease: "linear" }}
+              className="absolute -inset-4 rounded-full border-2 border-dashed border-blue-300"
+            />
+          </div>
+
+          {/* Animated Tree */}
+          {/* <div className="flex justify-center">
+            <AnimatedTree />
+          </div> */}
+        </motion.div>
+      </div>
+      </div>
 
         <motion.div
           className="absolute bottom-8 left-1/2 transform -translate-x-1/2"
