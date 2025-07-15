@@ -654,7 +654,7 @@ export default function Portfolio() {
               onClick={() => {
                 // Method 1: Direct download link (if resume is in public folder)
                 const link = document.createElement('a');
-                link.href = '/_resume2.pdf'; // Path to your resume file
+                link.href = '/SSResume.pdf'; // Path to your resume file
                 link.download = 'Ahmed_Resume.pdf'; // Downloaded filename
                 document.body.appendChild(link);
                 link.click();
